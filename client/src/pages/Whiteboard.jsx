@@ -260,15 +260,15 @@ const WhiteBoard = () => {
         <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center z-50 bg-black/20">
           <div
             ref={shareModalRef}
-            className="bg-neutral-950 p-6 rounded-xl shadow-md w-[400px] flex flex-col gap-4"
+            className="bg-neutral-950 p-4 sm:p-6 rounded-xl shadow-md w-[95vw] max-w-[400px] flex flex-col gap-4"
           >
-            <h2 className="text-lg font-semibold">Share Whiteboard</h2>
-            <div className="flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-white">Share Whiteboard</h2>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
               <input
                 type="text"
                 value={`${window.location.origin}/whiteboard/${roomid}`}
                 readOnly
-                className="flex-1 border px-3 py-1 rounded"
+                className="flex-1 border px-3 py-1 rounded text-sm break-all"
               />
               <button
                 type="button"
@@ -278,7 +278,7 @@ const WhiteBoard = () => {
                   );
                   toast.success("Link copied!");
                 }}
-                className="px-3 py-1 bg-green-500 rounded hover:bg-black"
+                className="px-3 py-1 bg-green-500 rounded hover:bg-black text-white text-sm transition"
               >
                 Copy
               </button>
@@ -297,35 +297,35 @@ const WhiteBoard = () => {
                 onChange={(e) => setInviteEmail(e.target.value)}
                 placeholder="Enter email to invite"
                 required
-                className="border px-3 py-2 rounded"
+                className="border px-3 py-2 rounded text-sm"
               />
               <button
                 type="submit"
-                className="bg-green-600 text-white py-2 rounded hover:bg-green-700"
+                className="bg-green-600 text-white py-2 rounded hover:bg-green-700 text-sm"
               >
                 {loading ? "Sending.." : "Send Invite" }
               </button>
             </form>
-
             <button
               onClick={() => setShowShareModal(false)}
-              className="text-sm text-gray-500 hover:underline mt-2 self-end"
+              className="text-sm text-gray-400 hover:underline mt-2 self-end"
             >
               Cancel
             </button>
           </div>
         </div>
       )}
-
-      <div className="flex-1 bg-[#e5e7eb] flex items-center justify-center relative">
+      <div className="flex-1 bg-[#e5e7eb] flex items-center justify-center relative px-2 sm:px-0">
         <canvas
           ref={canvasRef}
           onMouseDown={startDrawing}
           onMouseMove={draw}
           onMouseUp={stopDrawing}
           onMouseLeave={stopDrawing}
-          className="h-[600px] w-[1000px] bg-white rounded-2xl shadow-lg outline-none"
+          className="w-full max-w-[1000px] h-[50vh] sm:h-[600px] bg-white rounded-2xl shadow-lg outline-none"
           style={{
+            maxWidth: "100vw",
+            minHeight: "300px",
             cursor: `url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 26.586V30h3.414L24.707 10.707l-3.414-3.414L2 26.586zM28.293 7.707c.39-.39.39-1.024 0-1.414l-2.586-2.586a1 1 0 00-1.414 0l-2.121 2.121 4 4 2.121-2.121z" fill="black"/></svg>') 0 32, auto`,
           }}
         />
