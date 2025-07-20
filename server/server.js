@@ -2,7 +2,7 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
- import { connectDB } from "./utils/connection.js";
+ import { connectToDatabase } from "./utils/connection.js";
 import { createRoomRoute } from "./routes/createRoom.js";
 import { sendMailRoute  } from "./routes/sendMail.js";
 import { updateData } from "./controllers/updateData.js";
@@ -49,7 +49,7 @@ io.on("connection", (socket) => {
 app.use(cors());
 app.use(express.json());
 
-connectDB();
+await connectToDatabase();
 
 app.get("/", (req, res) => {
   res.send(`Server is running...`);

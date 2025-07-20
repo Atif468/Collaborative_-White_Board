@@ -31,8 +31,8 @@ const JoiningRoomComponent = () => {
       >
         JOIN
       </button>
-      <h1 onClick={createRoom} className="text-sm text-center text-blue-500">
-        don't have any room? create one
+      <h1 onClick={createRoom} className=" cursor-pointer text-sm text-center text-blue-500">
+        don't have any room? create one(auto create)
       </h1>
       
     </div>

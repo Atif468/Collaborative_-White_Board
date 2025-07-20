@@ -5,6 +5,8 @@ import { LuEraser } from "react-icons/lu";
 import { IoBrushOutline, IoPencilOutline } from "react-icons/io5";
 import { RingLoader } from "react-spinners";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const WhiteBoard = () => {
   const { roomid } = useParams();
@@ -14,8 +16,8 @@ const WhiteBoard = () => {
   const [color, setColor] = useState("#000000");
   const [lineWidth, setLineWidth] = useState(5);
   const [isLoading, setIsLoading] = useState(true);
-const [showShareModal, setShowShareModal] = useState(false);
-const [inviteEmail, setInviteEmail] = useState("");
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState("");
   const presetColors = [
     "#000000",
     "#FF0000",
@@ -33,6 +35,7 @@ const [inviteEmail, setInviteEmail] = useState("");
     "#008000",
     "#800000",
   ];
+  const shareModalRef = useRef(null);
 
   // socekt.io connection
   useEffect(() => {
@@ -66,31 +69,32 @@ const [inviteEmail, setInviteEmail] = useState("");
     };
   }, []);
 
+  const [loading, setLoading] = useState(false);
   const sendInviteEmail = async () => {
-  try {
-    const res = await axios.post("https://collaborative-white-board-2.onrender.com/api/send-mail", {
-      email: inviteEmail,
-      roomid,
-    });
-    alert("Invite sent!");
-    setInviteEmail("");
-    setShowShareModal(false);
-  } catch (error) {
-    console.error("Failed to send invite:", error);
-    alert("Failed to send invite.");
-  }
-};
-
+    try {
+      setLoading(true);
+      const res = await axios.post("https://collaborative-white-board-2.onrender.com/api/send-mail", {
+        email: inviteEmail,
+        roomid,
+      });
+      
+      setLoading(false);
+      toast.success("Invite sent!");
+      setInviteEmail("");
+      setShowShareModal(false);
+    } catch (error) {
+      console.error("Failed to send invite:", error);
+      toast.error("Failed to send invite.");
+    }
+  };
 
   const getImage = async () => {
     await axios
-      .get(
-        `https://collaborative-white-board-2.onrender.com/api/room/${roomid}`
-      )
+      .get(`https://collaborative-white-board-2.onrender.com/api/room/${roomid}`)
       .then((res) => {
         setIsLoading(false);
         if (res.data?.error == "Room not found") {
-          alert("Room not found");
+          toast.error("Room not found");
           window.open("/", "_self");
         } else {
           const savedImage = res.data.data.image;
@@ -101,6 +105,7 @@ const [inviteEmail, setInviteEmail] = useState("");
       })
       .catch((err) => {
         console.log("Error fetching image:", err);
+        // toast.error("Error fetching image");
       });
   };
 
@@ -169,8 +174,23 @@ const [inviteEmail, setInviteEmail] = useState("");
     });
   };
 
+  useEffect(() => {
+    if (!showShareModal) return;
+    const handleClick = (e) => {
+      if (
+        shareModalRef.current &&
+        !shareModalRef.current.contains(e.target)
+      ) {
+        setShowShareModal(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [showShareModal]);
+
   return (
     <div className="h-screen flex flex-col bg-[#f7f8fa]">
+      <ToastContainer position="bottom-right" autoClose={2500} />
       {isLoading && (
         <div className="absolute top-0 left-0 z-10 bg-white w-screen h-screen flex items-center justify-center">
           <RingLoader size={80} className="text-black" color="" />
@@ -230,67 +250,72 @@ const [inviteEmail, setInviteEmail] = useState("");
           <LuEraser size={18} /> Clear
         </button>
         <button
-  className="ml-4 flex items-center gap-2 px-5 py-2 rounded bg-blue-600 text-white font-medium hover:bg-blue-700 transition border-none shadow"
-  onClick={() => setShowShareModal(true)}
->
-  📤 Share
-</button>
-
-      </div>
-{showShareModal && (
-  <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-40 flex items-center justify-center z-50">
-    <div className="bg-white p-6 rounded-xl shadow-md w-[400px] flex flex-col gap-4">
-      <h2 className="text-lg font-semibold">Share Whiteboard</h2>
-      <div className="flex items-center gap-2">
-        <input
-          type="text"
-          value={`${window.location.origin}/${roomid}`}
-          readOnly
-          className="flex-1 border px-3 py-1 rounded"
-        />
-        <button
-          onClick={() => {
-            navigator.clipboard.writeText(`${window.location.origin}/${roomid}`);
-            alert("Link copied!");
-          }}
-          className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+          className="ml-4 flex items-center gap-2 px-5 py-2 rounded bg-blue-600 text-white font-medium hover:bg-blue-700 transition border-none shadow"
+          onClick={() => setShowShareModal(true)}
         >
-          Copy
+          📤 Share
         </button>
       </div>
+      {showShareModal && (
+        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center z-50 bg-black/20">
+          <div
+            ref={shareModalRef}
+            className="bg-neutral-950 p-6 rounded-xl shadow-md w-[400px] flex flex-col gap-4"
+          >
+            <h2 className="text-lg font-semibold">Share Whiteboard</h2>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={`${window.location.origin}/${roomid}`}
+                readOnly
+                className="flex-1 border px-3 py-1 rounded"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    `${window.location.origin}/${roomid}`
+                  );
+                  toast.success("Link copied!");
+                }}
+                className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+              >
+                Copy
+              </button>
+            </div>
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          sendInviteEmail();
-        }}
-        className="flex flex-col gap-2"
-      >
-        <input
-          type="email"
-          value={inviteEmail}
-          onChange={(e) => setInviteEmail(e.target.value)}
-          placeholder="Enter email to invite"
-          required
-          className="border px-3 py-2 rounded"
-        />
-        <button
-          type="submit"
-          className="bg-green-600 text-white py-2 rounded hover:bg-green-700"
-        >
-          Send Invite
-        </button>
-      </form>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                sendInviteEmail();
+              }}
+              className="flex flex-col gap-2"
+            >
+              <input
+                type="email"
+                value={inviteEmail}
+                onChange={(e) => setInviteEmail(e.target.value)}
+                placeholder="Enter email to invite"
+                required
+                className="border px-3 py-2 rounded"
+              />
+              <button
+                type="submit"
+                className="bg-green-600 text-white py-2 rounded hover:bg-green-700"
+              >
+                {loading ? "Sending.." : "Send Invite" }
+              </button>
+            </form>
 
-      <button
-        onClick={() => setShowShareModal(false)}
-        className="text-sm text-gray-500 hover:underline mt-2 self-end"
-      >
-        Cancel
-      </button>
-    </div>
-  </div>
-)}
+            <button
+              onClick={() => setShowShareModal(false)}
+              className="text-sm text-gray-500 hover:underline mt-2 self-end"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="flex-1 bg-[#e5e7eb] flex items-center justify-center relative">
         <canvas
