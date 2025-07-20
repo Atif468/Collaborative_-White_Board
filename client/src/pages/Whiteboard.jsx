@@ -266,7 +266,7 @@ const WhiteBoard = () => {
             <div className="flex items-center gap-2">
               <input
                 type="text"
-                value={`${window.location.origin}/${roomid}`}
+                value={`${window.location.origin}/whiteboard/${roomid}`}
                 readOnly
                 className="flex-1 border px-3 py-1 rounded"
               />
