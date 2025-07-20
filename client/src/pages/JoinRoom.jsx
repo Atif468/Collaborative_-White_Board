@@ -1,5 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const JoiningRoomComponent = () => {
   const [roomId, setRoomId] = useState("");
@@ -10,11 +12,12 @@ const JoiningRoomComponent = () => {
     await axios
       .get("https://collaborative-white-board-2.onrender.com/api/room/create")
       .then((res) => {
+        toast.success("Room created!");
         window.open(`/whiteboard/${res.data.roomId}`, "_self");
       })
       .catch((err) => {
         console.error("Error creating room:", err);
-        alert("Failed to create room. Please try again.");
+        toast.error("Failed to create room. Please try again.");
       })
       .finally(() => setLoading(false));
   };
@@ -66,6 +69,7 @@ const JoinRoom = () => {
           "linear-gradient(120deg, #e0e7ff 0%, #f0fdfa 100%)",
       }}
     >
+      <ToastContainer position="bottom-right" autoClose={2500} />
       <div className="flex items-center justify-center w-full h-full py-8">
         <JoiningRoomComponent />
       </div>
@@ -74,4 +78,3 @@ const JoinRoom = () => {
 };
 
 export default JoinRoom;
-        
