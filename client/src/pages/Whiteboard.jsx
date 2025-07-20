@@ -68,7 +68,7 @@ const [inviteEmail, setInviteEmail] = useState("");
 
   const sendInviteEmail = async () => {
   try {
-    const res = await axios.post("http://localhost:4000/api/send-mail", {
+    const res = await axios.post("https://collaborative-white-board-vk7g.onrender.com/api/send-mail", {
       email: inviteEmail,
       roomid,
     });
@@ -85,7 +85,7 @@ const [inviteEmail, setInviteEmail] = useState("");
   const getImage = async () => {
     await axios
       .get(
-        `https://collaborative-whiteboard-ysxd.onrender.com/api/room/${roomid}`
+        `https://collaborative-white-board-vk7g.onrender.com/api/room/${roomid}`
       )
       .then((res) => {
         setIsLoading(false);
