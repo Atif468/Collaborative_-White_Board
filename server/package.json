@@ -1,16 +1,16 @@
 {
   "name": "server",
   "version": "1.0.0",
+  "description": "Backend for Collaborative Whiteboard",
   "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-     "build": "echo 'No build step required'"
+    "build": "echo 'No build step required'",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Atif Ansari",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
