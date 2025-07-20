@@ -9,7 +9,7 @@
     "build": "echo 'No build step required'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Atif Ansari",
+  "author": "Mohd Atif Ansari",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
