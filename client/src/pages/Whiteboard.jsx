@@ -278,7 +278,7 @@ const WhiteBoard = () => {
                   );
                   toast.success("Link copied!");
                 }}
-                className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                className="px-3 py-1 bg-green-500 rounded hover:bg-black"
               >
                 Copy
               </button>
