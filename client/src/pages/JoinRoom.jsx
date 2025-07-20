@@ -5,7 +5,7 @@ const JoiningRoomComponent = () => {
   const [roomId, setRoomId] = useState("");
   const createRoom = async () => {
     await axios
-      .get("https://collaborative-whiteboard-ysxd.onrender.com/api/room/create")
+      .get("https://collaborative-white-board-2.onrender.com/api/room/create")
       .then((res) => {
         console.log(res.data.roomId);
         window.open(`/whiteboard/${res.data.roomId}`, "_self");
