@@ -274,7 +274,7 @@ const WhiteBoard = () => {
                 type="button"
                 onClick={() => {
                   navigator.clipboard.writeText(
-                    `${window.location.origin}/${roomid}`
+                    `${window.location.origin}/whiteboard/${roomid}`
                   );
                   toast.success("Link copied!");
                 }}
